@@ -1,111 +1,29 @@
 var express = require('express');
 var router = express.Router();
 const db = require('./pgExport');
+const { loginRequired } = require('../auth/helpers')
 
 
 
-router.get("/getAllUsers/", async (req, res, next) => {
+router.get('/', loginRequired, async (req, res, next) => {
   try {
-    let response = await db.any("SELECT * FROM users");
+    let users = await userQueries.getAllUsers()
     res.json({
-      status: "success",
-      body: response
+      payload: users,
+      msg: "Retrieved all users",
+      err: false
     })
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
-      status: "fail",
-      message: "Error: something went wrong"
+      payload: null,
+      msg: "Failed retrieving all users",
+      err: true
     })
   }
-})
-
-
-// router.get("/logged-in/", async (req, res) => {
-//   try {
-//     let response = await db.one("SELECT email FROM users WHERE loggedIn= true ;", req.body.loggedIn);
-//     res.json({
-//       status: "success",
-//       body: response
-//     })
-//   } catch (error) {
-//     res.status(500).json({
-//       status: "fail",
-//       message: "Error: something went wrong"
-//     })
-//   }
-// })
-
-
-// router.post("/log-in/:email",  async (req, res) => {
-//   let email = req.params.email
-//   try {
-//     let response = await db.any("UPDATE users SET loggedIn = true WHERE email = $1", email)
-//     res.json({
-//       status: "success",
-//       message: `${email} logged in`
-//     })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(500).json({
-//       status: "fail",
-//       message: "Error: something went wrong"
-//     })
-//   }
-// })
-
-
-// router.post("/log-out", async (req, res) => {
-//   try {
-//     let response = await db.any("UPDATE users SET loggedIn = false WHERE loggedIn = true")
-//     res.json({
-//       status: "success",
-//       body: response
-//     })
-//   } catch (error) {
-//     res.status(500).json({
-//       status: "fail",
-//       message: "Error: something went wrong"
-//     })
-//   }
-// })
+});
 
 
 
-// router.post("/sign-up/",  async(req,res) =>{
-//   try {
-//     let insertQuery = `
-//   INSERT INTO users(email, img_url, user_password)
-//   VALUES($1, $2, $3);
-//   `
-//     await db.none(insertQuery, [req.body.email, req.body.img_url, req.body.user_password]);
-//     res.json({
-//       body: req.body,
-//       message: `User registration was successful!`
-//     })
-//   } catch (error) {
-//     res.json({
-//       message: `There was an error!`
-//     })
-//   }
-// })
-
-
-
-// router.get("/email/:email", async(req,res) =>{
-//   let email = req.params.email
-//   try{
-//     let response = await db.one('SELECT *  FROM users WHERE email = $1 AND user_password = $2', [email, req.body.user_password])
-//     res.json({
-//       status: "success",
-//       body: response
-//     })
-//   }catch(error){
-//     res.status(500).json({
-//       status: "fail",
-//       message: "Error: something went wrong"
-//     })
-//   }
-// })
 
 router.get("/email/:email/:password", async(req,res) =>{
   let email = req.params.email
