@@ -3,16 +3,16 @@ const bcrypt = require('bcrypt');
 const hashPassword = async (password) => {
   try {
     const salt = await bcrypt.genSalt(12)
-    const password_digest = await bcrypt.hash(password, salt)
-    return password_digest
+    const userPassword = await bcrypt.hash(password, salt)
+    return userPassword
   } catch (err) {
     console.log('ERROR', err);
   }
 }
 
-const comparePasswords = async (candidatePassword, passwordDigest) => {
+const comparePasswords = async (candidatePassword, userPassword) => {
   try {
-    const match = await bcrypt.compare(candidatePassword, passwordDigest)
+    const match = await bcrypt.compare(candidatePassword, userPassword)
     return match
   } catch (err) {
     console.log('ERROR', err)

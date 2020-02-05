@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const db = require('./pgExport');
+const db = require('../database/db');
 const { loginRequired } = require('../auth/helpers')
+const usersQueries = require('../database/queries/users');
 
 
-
-router.get('/', loginRequired, async (req, res, next) => {
+router.get('/', /*loginRequired, */ async (req, res, next) => {
   try {
-    let users = await userQueries.getAllUsers()
+    let users = await usersQueries.getAllUsers()
     res.json({
       payload: users,
       msg: "Retrieved all users",

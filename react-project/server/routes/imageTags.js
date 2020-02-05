@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./pgExport');
+const db = require('../database/db');
 router.get('/', async (req, res) => {
     try {
         let response = await db.any('SELECT * FROM image_tags;');

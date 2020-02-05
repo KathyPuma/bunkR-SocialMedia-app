@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('./pgExport');
+const db = require('../database/db');
 
 router.get('/:hashtag', async (req, res) => {
     let hashtagName = req.params.hashtag;
