@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 const multer = require ('multer');
+const session = require('express-session')
+const passport = require('./auth/passport')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -29,6 +31,8 @@ const usersRouter = require('./routes/users');
 const tagsRouter = require('./routes/tags')
 const imagesRouter = require('./routes/images')
 const imageTagsRouter = require('./routes/imageTags')
+const authRouter = require('./routes/auth');
+
 //const multiRouter = require('.routes/multi')
 
 var app = express();
@@ -38,13 +42,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+  secret: "NOT_A_GOOD_SECRET",
+  resave: false,
+  saveUninitialized: true
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/tags', tagsRouter);
 app.use('/images', imagesRouter)
 app.use('/imageTags', imageTagsRouter)
-app.use('/multi', imagesRouter)
+// app.use('/multi', imagesRouter)
+app.use('/auth', authRouter);
 app.post('/upload', upload.single ("image"), (req,res,next) => {
 
     

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userQueries = require('../db/queries/users')
+const userQueries = require('../database/queries/users')
 const authHelpers = require('../auth/helpers')
 const passport = require('../auth/passport');
 const { loginRequired } = require('../auth/helpers')
